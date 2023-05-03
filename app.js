@@ -1,4 +1,5 @@
 const express = require('express');
+const pageRoute = require('./routes/pageRoute');
 
 const app = express();
 
@@ -6,15 +7,10 @@ const app = express();
 app.set('view engine', 'ejs');
 
 // middlewares
-app.use(express.static('public')); 
+app.use(express.static('public'));
 
 // route
-app.get('/', (req, res) => {
-  res.render('index');
-});
-app.get('/about', (req, res) => {
-  res.render('about');
-});
+app.use('/', pageRoute); // '/' ile başlayan istekleri pageRoute yönlendirir
 
 const port = 3000;
 app.listen(port, () => {
