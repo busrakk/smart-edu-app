@@ -1,9 +1,19 @@
-const express = require("express");
+const express = require('express');
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("index page");
+// template engine
+app.set('view engine', 'ejs');
+
+// middlewares
+app.use(express.static('public')); 
+
+// route
+app.get('/', (req, res) => {
+  res.render('index');
+});
+app.get('/about', (req, res) => {
+  res.render('about');
 });
 
 const port = 3000;
