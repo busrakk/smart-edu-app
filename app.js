@@ -16,6 +16,9 @@ app.set('view engine', 'ejs');
 
 // middlewares
 app.use(express.static('public'));
+// body'den gelen verileri yakalamk için
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // route
 app.use('/', pageRoute); // '/' ile başlayan istekleri pageRoute yönlendirir
