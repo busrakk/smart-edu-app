@@ -1,10 +1,22 @@
 const Course = require('../models/Course'); // course model
+const Category = require('../models/Category'); // category model
 
 exports.getAllCourses = async (req, res) => {
   try {
-    const courses = await Course.find();
+    const categorySlug = req.query.categories; // req.query: Yönlendirmede her sorgu metni parametresi için bir özellik içeren nesnedir
+    const category = await Category.findOne({ slug: categorySlug }); // parametreden gelen filtreleme
+    let filter = {};
+
+    if (categorySlug) {
+      filter = { category: category._id};
+    }
+
+    const courses = await Course.find(filter); // courses?categories=<category_name>
+    const categories = await Category.find();
+
     res.status(200).render('courses', {
       courses,
+      categories,
       page_name: 'courses',
     });
     // res.status(200).json({
