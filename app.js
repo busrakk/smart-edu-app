@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose'); // simple, schema for modeling data
+const session = require('express-session'); // kişiye özel içerik oluşturmak için kullanıcı bilgilerinin sunucu tarafında saklanmasını sağlayan araç
+
 const pageRoute = require('./routes/pageRoute');
 const courseRoute = require('./routes/courseRoute');
 const categoryRoute = require('./routes/categoryRoute');
@@ -16,13 +18,28 @@ mongoose
 // template engine
 app.set('view engine', 'ejs');
 
+// global variable
+global.userIN = null; // false
+
 // middlewares
 app.use(express.static('public'));
 // body'den gelen verileri yakalamk için
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: 'my_keyboard_cat',
+    resave: false,
+    saveUninitialized: true,
+    //cookie: { secure: true }
+  })
+);
 
 // route
+app.use('*', (req, res, next) => {
+  userIN = req.session.userID; // userIn bir değeri olursa true - giriş yapılırsa
+  next();
+});
 app.use('/', pageRoute); // '/' ile başlayan istekleri pageRoute yönlendirir
 app.use('/courses', courseRoute);
 app.use('/categories', categoryRoute);

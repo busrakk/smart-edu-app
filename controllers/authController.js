@@ -24,7 +24,9 @@ exports.loginUser = async (req, res) => {
       bcrypt.compare(password, user.password, (error, same) => { // girilen şifre ile kayıtlı kullanıcı şifresini karşılaştırma
         if (same) { // şifreler aynıysa
           // user session
-          res.status(200).send('success');
+          // oturum açan kullanıcıyı belirlemek için.
+          req.session.userID = user._id; // giriş işlemi sırasında kullanıcı ID'sini session alanında userID değişkenini oluşturup ona atama
+          res.status(200).redirect('/');
         }
       });
     }
