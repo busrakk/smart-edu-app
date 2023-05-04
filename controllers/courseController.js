@@ -20,6 +20,19 @@ exports.getAllCourses = async (req, res) => {
   }
 };
 
+exports.getCourse = async (req, res) => {
+  try {
+    const course = await Course.findOne({ slug: req.params.slug });
+    res.status(200).render('course', {
+      // render('course') - views sayfası
+      course,
+      page_name: 'courses',
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 exports.createCourse = async (req, res) => {
   try {
     const course = await Course.create(req.body);
