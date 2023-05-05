@@ -16,6 +16,11 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ['admin', 'teacher', 'student'],
+    default: 'student',
+  },
 });
 
 // model içinde middleware oluşturmak için 'pre' methodu kullanıldı.
