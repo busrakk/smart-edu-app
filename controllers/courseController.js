@@ -11,7 +11,7 @@ exports.getAllCourses = async (req, res) => {
       filter = { category: category._id};
     }
 
-    const courses = await Course.find(filter); // courses?categories=<category_name>
+    const courses = await Course.find(filter).sort('-createdAt'); // courses?categories=<category_name>
     const categories = await Category.find();
 
     res.status(200).render('courses', {
@@ -48,10 +48,7 @@ exports.getCourse = async (req, res) => {
 exports.createCourse = async (req, res) => {
   try {
     const course = await Course.create(req.body);
-    res.status(201).json({
-      status: 'success',
-      course,
-    }); // yeni oluşturulduğu için 201 kodu
+    res.status(201).redirect('/courses');
   } catch (error) {
     res.status(400).json({
       status: 'fail',
