@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose'); // simple, schema for modeling data
 const session = require('express-session'); // kişiye özel içerik oluşturmak için kullanıcı bilgilerinin sunucu tarafında saklanmasını sağlayan araç
+const MongoStore = require('connect-mongo'); // MongoDB oturum deposu - sunucuyu tekrar başlatıldığında oturumu kaybetmemek için
 
 const pageRoute = require('./routes/pageRoute');
 const courseRoute = require('./routes/courseRoute');
@@ -31,6 +32,9 @@ app.use(
     secret: 'my_keyboard_cat',
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: 'mongodb://127.0.0.1:27017/smartedu-app-db',
+    }),
     //cookie: { secure: true }
   })
 );
