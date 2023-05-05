@@ -8,7 +8,7 @@ exports.getAllCourses = async (req, res) => {
     let filter = {};
 
     if (categorySlug) {
-      filter = { category: category._id};
+      filter = { category: category._id };
     }
 
     const courses = await Course.find(filter).sort('-createdAt'); // courses?categories=<category_name>
@@ -32,9 +32,12 @@ exports.getAllCourses = async (req, res) => {
   }
 };
 
+// populate: bir koleksiyon içerisinde farklı bir koleksiyon ile ilişki kurulduğu zaman, bir sorgu içerisinde koleksiyon verilerini alırken ilişkili koleksiyon verisini de veritabanından çekme
 exports.getCourse = async (req, res) => {
   try {
-    const course = await Course.findOne({ slug: req.params.slug });
+    const course = await Course.findOne({ slug: req.params.slug }).populate(
+      'user'
+    );
     res.status(200).render('course', {
       // render('course') - views sayfası
       course,
@@ -47,7 +50,12 @@ exports.getCourse = async (req, res) => {
 
 exports.createCourse = async (req, res) => {
   try {
-    const course = await Course.create(req.body);
+    const course = await Course.create({
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      user: req.session.userID, // hangi user olduğunu belirleme
+    });
     res.status(201).redirect('/courses');
   } catch (error) {
     res.status(400).json({
