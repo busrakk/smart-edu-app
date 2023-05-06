@@ -127,3 +127,21 @@ exports.deleteCourse = async (req, res) => {
     }); // bad request için 400 kodu
   }
 };
+
+exports.updateCourse = async (req, res) => {
+  try {
+    const course = await Course.findOne({ slug: req.params.slug });
+    course.name = req.body.name;
+    course.description = req.body.description;
+    course.category = req.body.category;
+    await course.save();
+
+    req.flash('success', `${course.name} has been updated successfully`);
+    res.status(200).redirect('/users/dashboard');
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      error,
+    }); // bad request için 400 kodu
+  }
+};
