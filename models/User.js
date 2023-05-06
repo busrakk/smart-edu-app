@@ -26,7 +26,7 @@ const UserSchema = new Schema({
       // courses alanı bir array ve öğrenci her yeni kursa kaydolduğunda bu arraye yeni bir kurs bilgisi eklenecek
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Course',
-    }
+    },
   ],
 });
 
@@ -34,9 +34,17 @@ const UserSchema = new Schema({
 // password alanını şifreleyip "hash" e çevirme ve veritabanımına şifrelenmiş şekilde kaydedtme
 UserSchema.pre('save', function (next) {
   const user = this; // giriş yapan kullanıcıyı yakalamak için
-  bcrypt.hash(user.password, 10, (error, hash) => {
-    user.password = hash; // password, hash olarak kaydetme
-    next();
+
+  // user modelinde değişiklik olduğunda şifreyi yeniden hashlenmemesi için
+  if (!user.isModified('password')) return next();
+
+  bcrypt.genSalt(10, function (err, salt) {
+    if (err) return next(err);
+    bcrypt.hash(user.password, salt, function (err, hash) {
+      if (err) return next(err);
+      user.password = hash;
+      next();
+    });
   });
 });
 
