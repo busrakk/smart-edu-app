@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose'); // simple, schema for modeling data
 const session = require('express-session'); // kişiye özel içerik oluşturmak için kullanıcı bilgilerinin sunucu tarafında saklanmasını sağlayan araç
 const MongoStore = require('connect-mongo'); // MongoDB oturum deposu - sunucuyu tekrar başlatıldığında oturumu kaybetmemek için
+const flash = require('connect-flash');
 
 const pageRoute = require('./routes/pageRoute');
 const courseRoute = require('./routes/courseRoute');
@@ -38,6 +39,11 @@ app.use(
     //cookie: { secure: true }
   })
 );
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.flashMessages = req.flash();
+  next();
+});
 
 // route
 app.use('*', (req, res, next) => {

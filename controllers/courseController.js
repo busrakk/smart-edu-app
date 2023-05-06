@@ -23,11 +23,14 @@ exports.getAllCourses = async (req, res) => {
     }
 
     const courses = await Course.find({
-      $or: [ // regular expression
+      $or: [
+        // regular expression
         { name: { $regex: '.*' + filter.name + '.*', $options: 'i' } },
         { category: filter.category },
       ],
-    }).sort('-createdAt').populate('user'); // courses?categories=<category_name>
+    })
+      .sort('-createdAt')
+      .populate('user'); // courses?categories=<category_name>
     const categories = await Category.find();
 
     res.status(200).render('courses', {
@@ -76,12 +79,11 @@ exports.createCourse = async (req, res) => {
       category: req.body.category,
       user: req.session.userID, // hangi user olduğunu belirleme
     });
+    req.flash('success', `${course.name} has been created successfully`);
     res.status(201).redirect('/courses');
   } catch (error) {
-    res.status(400).json({
-      status: 'fail',
-      error,
-    }); // bad request için 400 kodu
+    req.flash('error', 'Something happened!');
+    res.status(400).redirect('/courses'); // bad request için 400 kodu
   }
 };
 
