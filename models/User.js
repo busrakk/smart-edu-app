@@ -21,6 +21,13 @@ const UserSchema = new Schema({
     enum: ['admin', 'teacher', 'student'],
     default: 'student',
   },
+  courses: [
+    {
+      // courses alanı bir array ve öğrenci her yeni kursa kaydolduğunda bu arraye yeni bir kurs bilgisi eklenecek
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course',
+    }
+  ],
 });
 
 // model içinde middleware oluşturmak için 'pre' methodu kullanıldı.

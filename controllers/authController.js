@@ -50,7 +50,7 @@ exports.logoutUser = (req, res) => {
 };
 
 exports.getDashboardPage = async (req, res) => {
-  const user = await User.findOne({ _id: req.session.userID }); // giriş yapan kullanıcıyı bulma
+  const user = await User.findOne({ _id: req.session.userID }).populate('courses'); // giriş yapan kullanıcıyı bulma
   const categories = await Category.find(); // tüm kategorileri çağırma
   const courses = await Course.find({ user: req.session.userID }); // kurslara ait teacher
   res.status(200).render('dashboard', {

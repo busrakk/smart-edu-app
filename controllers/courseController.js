@@ -1,5 +1,6 @@
 const Course = require('../models/Course'); // course model
 const Category = require('../models/Category'); // category model
+const User = require('../models/User'); // user model
 
 exports.getAllCourses = async (req, res) => {
   try {
@@ -57,6 +58,20 @@ exports.createCourse = async (req, res) => {
       user: req.session.userID, // hangi user olduğunu belirleme
     });
     res.status(201).redirect('/courses');
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      error,
+    }); // bad request için 400 kodu
+  }
+};
+
+exports.enrollCourse = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.userID);
+    await user.courses.push({ _id: req.body.course_id }); // inputtandan gelen id
+    await user.save();
+    res.status(200).redirect('/users/dashboard');
   } catch (error) {
     res.status(400).json({
       status: 'fail',
