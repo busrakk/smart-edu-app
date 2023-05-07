@@ -17,9 +17,9 @@ router.route('/signup').post(
       .withMessage('Please Enter Valid Email')
       .custom((userEmail) => {
         return User.findOne({ email: userEmail }).then((user) => {
-            if (user){
-                return Promise.reject('Email Already Exists');
-            }
+          if (user) {
+            return Promise.reject('Email Already Exists');
+          }
         });
       }),
     body('password').not().isEmpty().withMessage('Please Enter A Password'),
@@ -29,5 +29,6 @@ router.route('/signup').post(
 router.route('/login').post(authController.loginUser); // http://localhost:3000/users/login
 router.route('/logout').get(authController.logoutUser); // http://localhost:3000/users/logout
 router.route('/dashboard').get(authMiddleware, authController.getDashboardPage); // http://localhost:3000/users/dashboard
+router.route('/:id').delete(authController.deleteUser);
 
 module.exports = router;

@@ -66,10 +66,27 @@ exports.getDashboardPage = async (req, res) => {
   ); // giriş yapan kullanıcıyı bulma
   const categories = await Category.find(); // tüm kategorileri çağırma
   const courses = await Course.find({ user: req.session.userID }); // kurslara ait teacher
+  const users = await User.find();
   res.status(200).render('dashboard', {
     page_name: 'dashboard',
     user,
     categories,
     courses,
+    users,
   });
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndRemove(req.params.id);
+    await Course.deleteMany({ user: req.params.id }); // silinen öğretmenlerin kurslarının da silinmesi için
+
+    req.flash('success', `${user.name} has been removed successfully`);
+    res.status(200).redirect('/users/dashboard');
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      error,
+    }); // bad request için 400 kodu
+  }
 };
