@@ -4,6 +4,8 @@ const session = require('express-session'); // kişiye özel içerik oluşturmak
 const MongoStore = require('connect-mongo'); // MongoDB oturum deposu - sunucuyu tekrar başlatıldığında oturumu kaybetmemek için
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const pageRoute = require('./routes/pageRoute');
 const courseRoute = require('./routes/courseRoute');
@@ -14,7 +16,7 @@ const app = express();
 
 // connect db
 mongoose
-  .connect('mongodb://127.0.0.1:27017/smartedu-app-db')
+  .connect(process.env.MONGO_URI)
   .then(() => console.log('Successfully Connected!'))
   .catch((err) => console.error(err));
 
@@ -35,7 +37,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-      mongoUrl: 'mongodb://127.0.0.1:27017/smartedu-app-db',
+      mongoUrl: 'process.env.MONGO_URI',
     }),
     //cookie: { secure: true }
   })
@@ -61,7 +63,7 @@ app.use('/courses', courseRoute);
 app.use('/categories', categoryRoute);
 app.use('/users', userRoute);
 
-const port = 3000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`App started on port ${port}`);
 });

@@ -368,14 +368,23 @@ if(user) { %> <% if(user.role == 'student') { %>
 
     </div>
 
-    <div class="row mt-5">
-     <h2>Categories</h2>
+    <div class="d-flex row mt-5">
+     <h2 class="p-2">Categories</h2>
+     <div class="ml-auto p-2">
+      <button
+          class="btn btn-lg btn-warning rounded-0 text-white"
+          href="#"
+          data-toggle="modal"
+          data-target="#addCategory"
+        >
+          <span>ADD</span>
+        </button>
+    </div>
      <table class="table">
        <thead>
          <tr>
            <th scope="col">ID#</th>
            <th scope="col">Name</th>
-           <th scope="col">Add</th>
            <th scope="col">Delete</th>
          </tr>
        </thead>
@@ -384,16 +393,6 @@ if(user) { %> <% if(user.role == 'student') { %>
          <tr>
            <th scope="row"><%= categories[i]._id %></th>
            <th><%= categories[i].name %></th>
-           <th>
-            <button
-          class="btn btn-lg btn-warning rounded-0 text-white"
-          href="#"
-          data-toggle="modal"
-          data-target="#addCategory"
-        >
-          <span>ADD</span>
-        </button>
-           </th>
            <th>
              <a href="/categories/<%= categories[i]._id %>?_method=DELETE" onclick="return confirm('Are You sure?')" class="btn btn-danger rounded-0 text-white"><span>DELETE</span>
              </a>
